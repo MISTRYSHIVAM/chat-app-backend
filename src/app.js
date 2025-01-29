@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.use(cors({ origin: '', credentials: true }));
 
-app.get('/', (req, res) => {
+app.get('/welcome', (req, res) => {
     res.json({ statusCode: 200, message: "Welcome To Deployment Server" })
 })
 
