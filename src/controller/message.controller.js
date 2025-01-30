@@ -8,7 +8,9 @@ async function addMessage(req, res) {
     if (!conversationId || conversationId.trim() == '') {
         return res.json({ statusCode: 400, message: "please provide conversation" });
     }
-
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+        return res.json({ statusCode: 400, message: "please provide valid conversationId" });
+    }
     if (!sender || sender.trim() == '') {
         return res.json({ statusCode: 400, message: "please provide senderId" });
     }
