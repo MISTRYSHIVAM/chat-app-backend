@@ -13,8 +13,10 @@ app.get('/welcome', (req, res) => {
 
 import userRoute from './router/user.router.js';
 import conversationRoute from './router/conversation.router.js';
+import messageRoute from './router/message.router.js';
 
 app.use('/user', userRoute);
 app.use('/user/conversation', conversationRoute);
+app.use('/user/message', messageRoute);
 
 export { app };
