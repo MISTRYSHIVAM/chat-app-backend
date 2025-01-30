@@ -11,7 +11,7 @@ app.get('/welcome', (req, res) => {
     res.json({ statusCode: 200, message: "Welcome To Deployment Server" })
 })
 
-import userRoute from './router/userRouter.js';
+import userRoute from './router/user.router.js';
 
 app.use('/user', userRoute);
 
