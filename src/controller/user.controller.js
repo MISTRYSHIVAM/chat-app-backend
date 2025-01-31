@@ -33,7 +33,7 @@ async function addUser(req, res) {
             return res.json({ statusCode: 501, message: "something went wrong. user not created" });
         }
 
-        return res.json({ statusCode: 201, message: "student registered sucessfully", userData: cretaedUser });
+        return res.json({ statusCode: 201, message: "user registered sucessfully", userData: cretaedUser });
     } catch (error) {
         // console.log(error)
         return res.json({ statusCode: 501, message: "something went wrong", error });
