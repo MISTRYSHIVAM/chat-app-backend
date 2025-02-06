@@ -4,6 +4,6 @@ import { addConversation, getConversation } from "../controller/conversation.con
 const router = Router();
 
 router.route('/create').post(addConversation);
-router.route('/:userId').get(getConversation);
+router.route('/:userId').post(getConversation);
 
 export default router

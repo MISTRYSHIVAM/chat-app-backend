@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Conversation } from "../model/conversation.model.js";
 import { Message } from "../model/message.model.js";
 import { User } from "../model/user.model.js";
@@ -21,15 +22,15 @@ async function addMessage(req, res) {
         return res.json({ statusCode: 400, message: "provide the correct user" });
     }
 
-    const existedConversation = await Conversation.findById(conversationId);
+    const existedConversation = await Conversation.findById(conversationId)
 
     if (!existedConversation) {
-        return res.json({ statusCode: 409, message: "conversation already exist" });
+        return res.json({ statusCode: 409, message: "conversation not exist" });
     }
 
     const message = await Message.create(req.body);
 
-    const createdMessage = await Message.findById(message._id);
+    const createdMessage = await Message.findById(message._id).populate("sender", "userName");
 
     if (!createdMessage) {
         return res.json({ statusCode: 501, message: "something went wrong. message not stored" });
@@ -41,16 +42,17 @@ async function addMessage(req, res) {
 async function getMessage(req, res) {
     const conversationId = req.params.conversationId;
 
-    const messages = await Message.find({ conversationId });
 
-    const isValidConversation = await Conversation.findById(conversationId);
+    const isValidConversation = await Conversation.findById(conversationId)
 
     if (!isValidConversation) {
         return res.json({ statusCode: 404, message: "conversation not exist" });
     }
 
+    const messages = await Message.find({ conversationId }).populate("sender", "userName");
+
     if (messages.length === 0) {
-        return res.json({ statusCode: 200, message: "users do not start the conversation" });
+        return res.json({ statusCode: 200, message: "no messages" });
     }
 
     return res.json({ statusCode: 200, message: "messages fetched", messageData: messages });

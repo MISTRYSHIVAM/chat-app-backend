@@ -71,4 +71,34 @@ async function logInUser(req, res) {
     }
 }
 
-export { addUser, logInUser };
+async function getUser(req, res) {
+    console.log(req.params)
+    let id = req.params?.id;
+
+    try {
+        const userData = await User.findById(id);
+
+        if (userData) {
+            return res.json({ statusCode: 200, message: "user fetched successfully", userName: userData?.userName });
+        } else {
+            return res.json({ statusCode: 404, message: "user name not found" });
+        }
+    } catch (error) {
+        return res.json({ statusCode: 501, message: "something went wrong", error });
+    }
+}
+
+async function getAllUser(req, res) {
+    try {
+        const users = await User.find({});
+        if (!users) {
+            return res.json({ statusCode: 501, message: "something went wrong", error });
+        }
+
+        return res.json({ statusCode: 200, message: "fetched successfully", users });
+    } catch (error) {
+        return res.json({ statusCode: 501, message: "something went wrong", error });
+    }
+}
+
+export { addUser, logInUser, getUser, getAllUser };

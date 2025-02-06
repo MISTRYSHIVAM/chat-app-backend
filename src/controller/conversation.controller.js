@@ -43,6 +43,7 @@ async function addConversation(req, res) {
 }
 
 async function getConversation(req, res) {
+    // console.log("hiii")
     try {
         const userId = req.params.userId;
 
@@ -56,13 +57,18 @@ async function getConversation(req, res) {
             return res.json({ statusCode: 404, message: "user name not found" });
         }
 
-        const conversations = await Conversation.find({ members: user?._id.toString() })
-        // console.log(conversations)
-        if (conversations.length === 0) {
-            return res.json({ statusCode: 200, message: "user has no conversation" });
+        if (!req.body?.receiverId) {
+            return res.json({ statusCode: 400, message: "please provide receiverId" });
         }
 
-        return res.json({ statusCode: 200, message: "user conversation fetched", conversationData: conversations });
+        // const conversations = await Conversation.find({ members: user?._id.toString() }).populate({ "path": "members", "select": "_id userName", "match": { _id: { $ne: userId } } });
+        const conversations = await Conversation.find({ members: { $all: [user?._id.toString(), req.body?.receiverId.toString()] } }).populate({ "path": "members", "select": "_id userName", "match": { _id: { $ne: userId } } });
+        // console.log(conversations)
+        if (conversations.length === 0) {
+            return res.json({ statusCode: 200, message: "user has no conversation", hasStartedConversation: false });
+        }
+
+        return res.json({ statusCode: 200, message: "user conversation fetched", conversationData: conversations, hasStartedConversation: true });
     } catch (error) {
         return res.json({ statusCode: 501, message: "something went wrong", error });
     }
